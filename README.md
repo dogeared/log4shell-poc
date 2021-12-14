@@ -2,6 +2,9 @@
 
 The purpose of this project is to demonstrate the Log4Shell exploit with Log4J versions older than `2.15.0`.
 
+For more information about the exploit and the mechanics of how it works, 
+[here is a good blog post](https://snyk.io/blog/log4j-rce-log4shell-vulnerability-cve-2021-4428/).
+
 ### Requirements
 
 You'll need one of the following Java SDKs:
