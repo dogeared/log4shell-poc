@@ -2,6 +2,9 @@
 
 The purpose of this project is to demonstrate the Log4Shell exploit with Log4J versions older than `2.15.0`.
 
+This repo is based on the excellent proof-of-concept published by [BrianV](https://github.com/bmvermeer/log4jexploit/).
+The PoC is a great starting point. This project expands on it by fleshing it out into a fully standalone demo.
+
 For more information about the exploit and the mechanics of how it works, 
 [here is a good blog post](https://snyk.io/blog/log4j-rce-log4shell-vulnerability-cve-2021-4428/).
 
