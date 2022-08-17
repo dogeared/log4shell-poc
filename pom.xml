@@ -17,6 +17,5 @@
   
   <modules>
     <module>log4shell-server</module>
-    <module>log4shell-client</module>
   </modules>
 </project>
