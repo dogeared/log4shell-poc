@@ -26,7 +26,7 @@ public  class  Server  {
     private  static  final String LDAP_BASE = "dc=example,dc=com" ;
 
     public  static  void  main (String[] args) throws IOException, LDAPException {
-        String[] defaultArgs = {"http://127.0.0.1:8000/#Evil", "9999", "8000"};
+        String[] defaultArgs = {"http://127.0.0.1:8000/#Test", "9999", "8000"};
 
         if (args.length != 3) {
             args = defaultArgs;
